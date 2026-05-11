@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <title>Riwaz Udas | Premium AI Engineer & Software Developer Portfolio</title>
+  <meta name="description" content="AI Engineer specializing in Large Language Models (LLMs), multimodal machine learning, and high-performance backend systems in Go/Spring Boot. Master of Computer Science from the University of Melbourne.">
+  <meta name="keywords" content="Riwaz Udas, AI Engineer, LLM, Machine Learning, RAG, Go Developer, Software Engineer, Geospatial AI, PyTorch, Melbourne">
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- FontAwesome for Premium Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- --- AMBIENT GRAPHICS SYSTEM --- -->
+  <div class="ambient-bg">
+    <div class="grid-overlay"></div>
+    <div class="glow-spot glow-cyan"></div>
+    <div class="glow-spot glow-purple"></div>
+    <div class="glow-spot glow-indigo"></div>
+  </div>
+  
+  <!-- Interactive Floating Background Particles -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- --- GLASS NAVIGATION BAR --- -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo">
+        <span class="logo-highlight">[R]</span> RIWAZ.AI
+      </a>
+      
+      <ul class="nav-links">
+        <li><a href="#hero" class="nav-link active">Home</a></li>
+        <li><a href="#experience" class="nav-link">Experience</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      
+      <div style="display: flex; align-items: center; gap: 1.2rem;">
+        <div class="nav-badge">
+          <div class="pulse-dot"></div>
+          Active Operator
+        </div>
+        <button class="nav-action-btn" onclick="document.getElementById('terminal-input').focus(); document.getElementById('contact').scrollIntoView({behavior: 'smooth'});">
+          Run Terminal
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- --- HERO SECTION --- -->
+  <header id="hero">
+    <div class="hero-meta-badge">
+      <i class="fa-solid fa-location-dot"></i> Currently in Melbourne, AU
+    </div>
+    
+    <h1 class="hero-title">
+      <span class="gradient-text-shimmer">Engineering Intelligent Systems &</span><br>
+      <span class="gradient-cyan-purple">Autonomous Agents</span>
+    </h1>
+    
+    <div class="hero-subtitle">
+      riwaz@operator:~$ specializing in <span id="typewriter-text"></span><span class="typewriter-cursor"></span>
+    </div>
+    
+    <p class="hero-desc">
+      AI Engineer & Technical Operator with a Master’s from <span class="tech-keyword" onclick="showTerminalMsg('uom')">the University of Melbourne</span>. 
+      Bridging the gap between cutting-edge research in <span class="tech-keyword" onclick="showTerminalMsg('llms')">LLMs</span>, 
+      <span class="tech-keyword" onclick="showTerminalMsg('rag')">Multi-Agent Systems</span>, and highly scalable production backend infrastructure 
+      using <span class="tech-keyword" onclick="showTerminalMsg('go')">Go</span>, <span class="tech-keyword" onclick="showTerminalMsg('python')">Python</span>, 
+      and <span class="tech-keyword" onclick="showTerminalMsg('ops')">Kubernetes</span>.
+    </p>
+    
+    <div class="hero-ctas">
+      <a href="#experience" class="btn btn-primary">
+        Explore Case Studies <i class="fa-solid fa-arrow-right"></i>
+      </a>
+      <a href="#contact" class="btn btn-secondary">
+        Get In Touch <i class="fa-solid fa-terminal"></i>
+      </a>
+      
+      <div class="hero-socials">
+        <a href="https://github.com/riwazudas" target="_blank" class="social-icon" title="GitHub"><i class="fa-brands fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/riwaz-udas-7aab521b1/" target="_blank" class="social-icon" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="mailto:udasriwaz@gmail.com" class="social-icon" title="Email"><i class="fa-solid fa-envelope"></i></a>
+      </div>
+    </div>
+    
+    <!-- Floating Live metrics widgets -->
+    <div class="hero-metrics">
+      <div class="metric-card glass-card">
+        <div class="metric-val" data-target="100">0</div>
+        <div class="metric-label">M+ Records / Year</div>
+        <div class="metric-desc">Automated security cleanup script throughput in Ory Hydra.</div>
+      </div>
+      <div class="metric-card glass-card">
+        <div class="metric-val" data-target="2">0</div>
+        <div class="metric-label">M+ Daily Active Users</div>
+        <div class="metric-desc">SQL query indexing & database microservice optimizations.</div>
+      </div>
+      <div class="metric-card glass-card">
+        <div class="metric-val" data-target="1200">0</div>
+        <div class="metric-label">CNN Signature Samples</div>
+        <div class="metric-desc">Labelled high-fidelity dataset for CNN forgery detector.</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- --- TECHNICAL CASE STUDIES (EXPERIENCE) --- -->
+  <section id="experience">
+    <div class="section-header">
+      <div class="section-tag">Chronology</div>
+      <h2 class="section-title"><span>Technical Case Studies</span></h2>
+    </div>
+    
+    <div class="timeline">
+    
+      <!-- CASE STUDY 1: BYJU'S MTS I -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        
+        <div class="case-study-content glass-card">
+          <div class="role-header">
+            <div class="role-title-group">
+              <h3>Member of Technical Staff I</h3>
+              <div class="role-company"><i class="fa-solid fa-bolt"></i> Byju’s</div>
+            </div>
+            <div class="role-date-loc">
+              <div>Oct 2023 – Jan 2024</div>
+              <div>Bangalore, India</div>
+            </div>
+          </div>
+          
+          <ul class="role-bullet-list">
+            <li class="role-bullet">
+              Architected secure authentication structures based on <span class="tech-keyword" onclick="showTerminalMsg('oauth')">OAuth 2.0</span> using <span class="tech-keyword" onclick="showTerminalMsg('hydra')">Ory Hydra</span>, safeguarding data privacy across multiple platform divisions.
+            </li>
+            <li class="role-bullet">
+              Engineered and refactored <span class="tech-keyword">30+ production-grade REST APIs</span>, enhancing token processing workflows and third-party mobile OTP endpoints.
+            </li>
+            <li class="role-bullet">
+              Deployed sliding-window <span class="tech-keyword" onclick="showTerminalMsg('ratelimit')">Rate Limiting middleware</span> with custom IP filtering, neutralizing <span class="tech-keyword">50K+ malicious requests</span> during load events.
+            </li>
+            <li class="role-bullet">
+              Constructed high-speed cleanup jobs in <span class="tech-keyword">Go</span> to automate life-cycle routines for expired auth records, executing over <span class="tech-keyword">100M+ database sweeps</span> annually.
+            </li>
+            <li class="role-bullet">
+              Optimized query index models for distributed transactional databases serving <span class="tech-keyword">2M+ active consumers</span>, cutting REST endpoints response times dramatically.
+            </li>
+          </ul>
+          
+          <div class="tech-badge-container">
+            <div class="tech-badge"><i class="fa-brands fa-golang"></i> Go</div>
+            <div class="tech-badge"><i class="fa-solid fa-key"></i> OAuth 2.0</div>
+            <div class="tech-badge"><i class="fa-solid fa-shield-halved"></i> Ory Hydra</div>
+            <div class="tech-badge"><i class="fa-brands fa-aws"></i> AWS EKS/ECS</div>
+            <div class="tech-badge"><i class="fa-brands fa-docker"></i> Docker</div>
+            <div class="tech-badge"><i class="fa-solid fa-database"></i> PostgreSQL</div>
+            <div class="tech-badge"><i class="fa-solid fa-gauge"></i> Prom & Grafana</div>
+            <div class="tech-badge"><i class="fa-solid fa-network-wired"></i> Redis</div>
+          </div>
+        </div>
+        
+        <!-- Case Study Sidebar with Metrics + Architecture Chart -->
+        <div class="case-study-sidebar">
+          <div class="case-sidebar-widget glass-card">
+            <div class="widget-title"><i class="fa-solid fa-chart-line"></i> Impact Metrics</div>
+            <div class="impact-list">
+              <div class="impact-metric">50K+ <span>Malicious Attacks Prevented</span></div>
+              <div class="impact-metric">100M+ <span>Auth Sweeps/Year Automated</span></div>
+              <div class="impact-metric">2M+ <span>Daily Users Supported</span></div>
+            </div>
+          </div>
+          
+          <div class="case-sidebar-widget glass-card">
+            <div class="widget-title"><i class="fa-solid fa-diagram-project"></i> Architecture Diagram</div>
+            <div class="arch-diagram-card">
+              <!-- SVG Schematic for OAuth Flow -->
+              <svg class="schematic" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Clients -->
+                <rect x="5" y="30" width="22" height="18" rx="3" fill="#1e1e24" stroke="rgba(255,255,255,0.15)"/>
+                <text x="8" y="41" fill="#9ca3af" font-size="5">Client</text>
+                
+                <!-- Rate Limiter -->
+                <rect x="42" y="24" width="28" height="30" rx="3" fill="rgba(var(--accent-cyan-rgb), 0.05)" stroke="var(--accent-cyan)" stroke-width="0.8"/>
+                <text x="45" y="38" fill="#fff" font-size="5">Go Rate</text>
+                <text x="45" y="45" fill="#fff" font-size="5">Limiter</text>
+                
+                <!-- Ory Hydra -->
+                <rect x="85" y="24" width="30" height="30" rx="3" fill="rgba(var(--accent-indigo-rgb), 0.05)" stroke="var(--accent-indigo)" stroke-width="0.8"/>
+                <text x="89" y="38" fill="#fff" font-size="5">Ory</text>
+                <text x="89" y="45" fill="#fff" font-size="5">Hydra</text>
+                
+                <!-- DB -->
+                <circle cx="142" cy="39" r="13" fill="#1e1e24" stroke="rgba(255,255,255,0.15)"/>
+                <text x="136" y="41" fill="#9ca3af" font-size="5">Postgres</text>
+                
+                <!-- Connective Paths with animate pulses -->
+                <path d="M27 39 H42" stroke="var(--accent-cyan)" stroke-width="0.8" class="pulse-line"/>
+                <path d="M70 39 H85" stroke="var(--accent-indigo)" stroke-width="0.8" class="pulse-line"/>
+                <path d="M115 39 H129" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- CASE STUDY 2: QUANTUM AI CLOUD -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        
+        <div class="case-study-content glass-card">
+          <div class="role-header">
+            <div class="role-title-group">
+              <h3>Research Intern</h3>
+              <div class="role-company"><i class="fa-solid fa-atom"></i> Quantum AI Cloud</div>
+            </div>
+            <div class="role-date-loc">
+              <div>Jul 2024 – Sep 2024</div>
+              <div>Melbourne, Australia</div>
+            </div>
+          </div>
+          
+          <ul class="role-bullet-list">
+            <li class="role-bullet">
+              Designed custom <span class="tech-keyword" onclick="showTerminalMsg('rl')">Reinforcement Learning</span> frameworks to schedule complex computational tasks across decentralized quantum cloud clusters.
+            </li>
+            <li class="role-bullet">
+              Implemented, tuned, and evaluated actor-critic and off-policy agents using <span class="tech-keyword">A2C</span>, <span class="tech-keyword">PPO</span>, <span class="tech-keyword">SAC</span>, and <span class="tech-keyword">IMPALA</span> to maximize resource utilization and diminish task delays.
+            </li>
+            <li class="role-bullet">
+              Modelled and benchmarked hybrid classical-quantum scheduling topologies, optimizing core task assignment heuristics.
+            </li>
+          </ul>
+          
+          <div class="tech-badge-container">
+            <div class="tech-badge"><i class="fa-brands fa-python"></i> Python</div>
+            <div class="tech-badge"><i class="fa-solid fa-brain"></i> PyTorch</div>
+            <div class="tech-badge"><i class="fa-solid fa-gamepad"></i> Reinforcement Learning</div>
+            <div class="tech-badge"><i class="fa-solid fa-network-wired"></i> Distributed Scheduler</div>
+            <div class="tech-badge"><i class="fa-solid fa-flask"></i> Scientific Simulation</div>
+          </div>
+        </div>
+        
+        <div class="case-study-sidebar">
+          <div class="case-sidebar-widget glass-card">
+            <div class="widget-title"><i class="fa-solid fa-chart-line"></i> Technical Focus</div>
+            <div class="impact-list">
+              <div class="impact-metric">4 Algorithms <span>SAC, PPO, A2C, IMPALA Benchmark</span></div>
+              <div class="impact-metric">Quantum Cloud <span>Resource Task Simulation Models</span></div>
+            </div>
+          </div>
+          
+          <div class="case-sidebar-widget glass-card">
+            <div class="widget-title"><i class="fa-solid fa-diagram-project"></i> Scheduler Pipeline</div>
+            <div class="arch-diagram-card">
+              <!-- SVG Schematic for RL Flow -->
+              <svg class="schematic" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Task Queue -->
+                <rect x="5" y="24" width="22" height="30" rx="3" fill="#1e1e24" stroke="rgba(255,255,255,0.15)"/>
+                <text x="8" y="36" fill="#9ca3af" font-size="5">Task</text>
+                <text x="8" y="44" fill="#9ca3af" font-size="5">Queue</text>
+                
+                <!-- RL Agent -->
+                <rect x="42" y="20" width="35" height="38" rx="3" fill="rgba(var(--accent-purple-rgb), 0.05)" stroke="var(--accent-purple)" stroke-width="0.8"/>
+                <text x="46" y="34" fill="#fff" font-size="5">RL Agent</text>
+                <text x="46" y="41" fill="#fff" font-size="4.5" class="terminal-text-cyan">(PPO/SAC)</text>
+                <text x="46" y="48" fill="var(--accent-cyan)" font-size="4">Policy network</text>
+                
+                <!-- Multi Compute Targets -->
+                <rect x="95" y="15" width="22" height="15" rx="2" fill="#1e1e24" stroke="rgba(255,255,255,0.1)"/>
+                <text x="98" y="24" fill="#9ca3af" font-size="4.5">Classical</text>
+                
+                <rect x="95" y="45" width="22" height="15" rx="2" fill="#1e1e24" stroke="var(--accent-cyan)" stroke-width="0.6"/>
+                <text x="98" y="54" fill="#fff" font-size="4.5">Quantum</text>
+                
+                <!-- Paths -->
+                <path d="M27 39 H42" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+                <path d="M77 34 L95 22.5" stroke="var(--accent-purple)" stroke-width="0.8" class="pulse-line"/>
+                <path d="M77 44 L95 52.5" stroke="var(--accent-cyan)" stroke-width="0.8" class="pulse-line"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- CASE STUDY 3: BYJU'S INTERN -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        
+        <div class="case-study-content glass-card">
+          <div class="role-header">
+            <div class="role-title-group">
+              <h3>Software Engineering Intern</h3>
+              <div class="role-company"><i class="fa-solid fa-compass"></i> Byju’s</div>
+            </div>
+            <div class="role-date-loc">
+              <div>Jan 2023 – Sep 2023</div>
+              <div>Bangalore, India</div>
+            </div>
+          </div>
+          
+          <ul class="role-bullet-list">
+            <li class="role-bullet">
+              Coordinated with platform engineers to upgrade the primary Golang OAuth 2.0 gateway powering <span class="tech-keyword">10+ application pipelines</span>.
+            </li>
+            <li class="role-bullet">
+              Configured <span class="tech-keyword" onclick="showTerminalMsg('prometheus')">Prometheus telemetry custom metrics</span> inside critical identity services to track HTTP latencies, query timings, and token authentication failures.
+            </li>
+            <li class="role-bullet">
+              Assembled real-time observability dashboards using <span class="tech-keyword">Grafana</span>, establishing <span class="tech-keyword">15+ automated warning systems</span> that reduced incident identification durations by 30%.
+            </li>
+          </ul>
+          
+          <div class="tech-badge-container">
+            <div class="tech-badge"><i class="fa-brands fa-golang"></i> Go</div>
+            <div class="tech-badge"><i class="fa-solid fa-heartbeat"></i> Prometheus</div>
+            <div class="tech-badge"><i class="fa-solid fa-chart-line"></i> Grafana</div>
+            <div class="tech-badge"><i class="fa-solid fa-shield"></i> Identity Security</div>
+            <div class="tech-badge"><i class="fa-solid fa-network-wired"></i> Microservices</div>
+          </div>
+        </div>
+        
+        <div class="case-study-sidebar">
+          <div class="case-sidebar-widget glass-card">
+            <div class="widget-title"><i class="fa-solid fa-chart-line"></i> Monitoring Scope</div>
+            <div class="impact-list">
+              <div class="impact-metric">15+ <span>Automated Incident Alerts</span></div>
+              <div class="impact-metric">30+ <span>Instrumented REST APIs</span></div>
+            </div>
+          </div>
+          
+          <div class="case-sidebar-widget glass-card">
+            <div class="widget-title"><i class="fa-solid fa-diagram-project"></i> Telemetry Chain</div>
+            <div class="arch-diagram-card">
+              <svg class="schematic" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- APIs -->
+                <rect x="5" y="24" width="25" height="30" rx="2" fill="#1e1e24" stroke="rgba(255,255,255,0.1)"/>
+                <text x="8" y="37" fill="#9ca3af" font-size="5">Identity</text>
+                <text x="8" y="45" fill="#9ca3af" font-size="5">APIs</text>
+                
+                <!-- Prometheus -->
+                <rect x="50" y="24" width="35" height="30" rx="3" fill="rgba(var(--accent-cyan-rgb), 0.05)" stroke="var(--accent-cyan)" stroke-width="0.8"/>
+                <text x="53" y="37" fill="#fff" font-size="5">Prometheus</text>
+                <text x="53" y="44" fill="#9ca3af" font-size="4" class="terminal-text-cyan">Telemetry Pull</text>
+                
+                <!-- Grafana -->
+                <rect x="105" y="24" width="30" height="30" rx="3" fill="rgba(var(--accent-indigo-rgb), 0.05)" stroke="var(--accent-indigo)" stroke-width="0.8"/>
+                <text x="109" y="37" fill="#fff" font-size="5">Grafana</text>
+                <text x="109" y="44" fill="#9ca3af" font-size="4" class="terminal-text-indigo">Dashboard</text>
+                
+                <!-- Connectors -->
+                <path d="M30 39 H50" stroke="var(--accent-cyan)" stroke-width="0.8" class="pulse-line"/>
+                <path d="M85 39 H105" stroke="var(--accent-indigo)" stroke-width="0.8" class="pulse-line"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- --- FEATURED SYSTEMS (PROJECTS) --- -->
+  <section id="projects">
+    <div class="section-header">
+      <div class="section-tag">Showcase</div>
+      <h2 class="section-title"><span>Featured Production-Ready Systems</span></h2>
+    </div>
+    
+    <div class="projects-grid">
+    
+      <!-- PROJECT 1: MASTER'S THESIS -->
+      <div class="project-card-large glass-card">
+        <div class="project-display">
+          <div class="project-meta">
+            <span class="project-badge-thesis"><i class="fa-solid fa-graduation-cap"></i> Master's Thesis</span>
+            <span class="tech-badge"><i class="fa-solid fa-globe"></i> Geospatial AI</span>
+          </div>
+          
+          <h3 class="project-title">Social Media Geotagging using LLMs</h3>
+          
+          <p class="project-desc">
+            Created a state-of-the-art multimodal geolocation model for my Master's Thesis. 
+            The system analyzes unstructured text context, post metadata, and nested geospatial signals 
+            to place social media posts into complex hierarchic geographic buckets (state, city, municipality, and suburb).
+          </p>
+          
+          <p class="project-desc">
+            Leveraged deep parameter-efficient tuning (<span class="tech-keyword" onclick="showTerminalMsg('lora')">LoRA</span>) and instruction alignment to adjust <span class="tech-keyword">Gemma-7B</span>, <span class="tech-keyword">LLaMA-8B</span>, and <span class="tech-keyword">Mistral-7B</span>, evaluating on datasets with <span class="tech-keyword">millions of historical geo-stamps</span>.
+          </p>
+          
+          <div class="tech-badge-container" style="margin-top: 10px;">
+            <div class="tech-badge"><i class="fa-solid fa-brain"></i> PyTorch</div>
+            <div class="tech-badge"><i class="fa-solid fa-cube"></i> Hugging Face</div>
+            <div class="tech-badge">LLaMA-8B</div>
+            <div class="tech-badge">Gemma-7B</div>
+            <div class="tech-badge">LoRA / QLoRA</div>
+            <div class="tech-badge">Multi-Task Learning</div>
+            <div class="tech-badge">GIS Map Tools</div>
+          </div>
+        </div>
+        
+        <!-- Architectural/Static Details of Thesis Model -->
+        <div class="case-sidebar-widget glass-card" style="margin-top: 0; background: rgba(3, 3, 5, 0.4); border-color: rgba(255,255,255,0.04);">
+          <div class="widget-title"><i class="fa-solid fa-cubes"></i> Hierarchical Geolocation Model Stack</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 12px; height: 100%; justify-content: center;">
+            <div class="glass-card" style="padding: 10px; background: rgba(255, 255, 255, 0.01); border-color: rgba(255, 255, 255, 0.05);">
+              <strong style="color: #fff; display: block; margin-bottom: 4px;">1. Multimodal Text Encoder</strong>
+              Extracts semantic location clues, local colloquialisms, and temporal post structures.
+            </div>
+            <div class="glass-card" style="padding: 10px; background: rgba(255, 255, 255, 0.01); border-color: rgba(255, 255, 255, 0.05);">
+              <strong style="color: #fff; display: block; margin-bottom: 4px;">2. Geographic Classifier Heads</strong>
+              Staggered loss layers predict coordinates sequentially: State (e.g. Victoria) → Metro City → Suburb.
+            </div>
+            <div class="glass-card" style="padding: 10px; background: rgba(255, 255, 255, 0.01); border-color: rgba(255, 255, 255, 0.05);">
+              <strong style="color: #fff; display: block; margin-bottom: 4px;">3. GIS Refinement Pipeline</strong>
+              Resolves ambiguity with OpenStreetMap polygon queries to minimize error margins.
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- PROJECT 2: NEPAL LAW AI CHATBOT (RAG + SIMULATOR) -->
+      <div class="project-card-large glass-card">
+        <div class="project-display">
+          <div class="project-meta">
+            <span class="project-badge-rag"><i class="fa-solid fa-shield-halved"></i> Production System</span>
+            <span class="tech-badge"><i class="fa-solid fa-shield"></i> Legal RAG Tech</span>
+          </div>
+          
+          <h3 class="project-title">Nepal Law AI Chatbot & Self-Healing Pipeline</h3>
+          
+          <p class="project-desc">
+            A self-healing, multi-lingual RAG legal framework indexing constitution, legislative acts, and supreme court rulings. 
+            The system employs automated web crawlers to collect and map legal artifacts, vectorizing documents in both English and Nepali.
+          </p>
+          
+          <p class="project-desc">
+            Features an autonomous **knowledge-base self-repair mechanism** that detects broken node matches, triggers recursive text re-chunking, and re-computes semantic vector embeddings dynamically.
+          </p>
+          
+          <div class="project-links">
+            <a href="https://github.com/riwazudas" target="_blank" class="project-link"><i class="fa-brands fa-github"></i> Source Repository</a>
+          </div>
+          
+          <div class="tech-badge-container" style="margin-top: 10px;">
+            <div class="tech-badge"><i class="fa-brands fa-python"></i> Python</div>
+            <div class="tech-badge">FastAPI</div>
+            <div class="tech-badge">Qdrant / PGVector</div>
+            <div class="tech-badge">Bilingual Embeddings</div>
+            <div class="tech-badge">Hierarchical Chunking</div>
+            <div class="tech-badge">Self-Heal daemon</div>
+          </div>
+        </div>
+        
+        <!-- Live RAG Interactive Simulator widget -->
+        <div class="rag-simulator-container">
+          <div class="rag-header">
+            <div class="rag-title">Bilingual RAG Pipeline Visualizer</div>
+            <div class="rag-selector-label">Query Target</div>
+          </div>
+          
+          <div class="rag-query-selector">
+            <button class="rag-query-btn active" onclick="runRagSimulation('court')">Supreme Court Bills</button>
+            <button class="rag-query-btn" onclick="runRagSimulation('rights')">Article 16 Rights</button>
+            <button class="rag-query-btn" onclick="runRagSimulation('forgery')">Contract Penalty</button>
+          </div>
+          
+          <div class="rag-flow-grid">
+            <!-- Stage 1 -->
+            <div class="rag-stage active" id="rag-stage-1">
+              <div class="rag-stage-num">01 / INGEST</div>
+              <div class="rag-stage-title">Bilingual Ingestion</div>
+              <div class="rag-stage-body" id="rag-stage-1-body">
+                Analyzing query text...
+              </div>
+              <div class="rag-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+            
+            <!-- Stage 2 -->
+            <div class="rag-stage" id="rag-stage-2">
+              <div class="rag-stage-num">02 / VECTOR</div>
+              <div class="rag-stage-title">Embedding Search</div>
+              <div class="rag-stage-body" id="rag-stage-2-body">
+                Awaiting vector pipeline execution...
+              </div>
+              <div class="rag-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+            
+            <!-- Stage 3 -->
+            <div class="rag-stage" id="rag-stage-3">
+              <div class="rag-stage-num">03 / CONTEXT</div>
+              <div class="rag-stage-title">Chunk Extract</div>
+              <div class="rag-stage-body" id="rag-stage-3-body">
+                Retrieving corresponding legal sections...
+              </div>
+              <div class="rag-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+            
+            <!-- Stage 4 -->
+            <div class="rag-stage" id="rag-stage-4">
+              <div class="rag-stage-num">04 / SYNTH</div>
+              <div class="rag-stage-title">LLM Response</div>
+              <div class="rag-stage-body" id="rag-stage-4-body">
+                Synthesizing response node...
+              </div>
+            </div>
+          </div>
+          
+          <div class="rag-terminal-output" id="rag-log-stream">
+            System standing by. Select a query above to start simulation stream.
+          </div>
+        </div>
+      </div>
+      
+      <!-- PROJECT 3: SENTIMENT SERVICE -->
+      <div class="project-card-small glass-card">
+        <div class="project-small-top">
+          <div class="project-icon-box"><i class="fa-solid fa-chart-bar"></i></div>
+          <h4>BERT Review Sentiment Classifier</h4>
+          <p>
+            Fine-tuned a transformer review-classification model based on BERT, hosting it inside a optimized FastAPI endpoint. 
+            Integrated into a clean React web interface with continuous Firebase CDN deployment.
+          </p>
+        </div>
+        <div class="tech-badge-container">
+          <div class="tech-badge">BERT</div>
+          <div class="tech-badge">FastAPI</div>
+          <div class="tech-badge">React</div>
+          <div class="tech-badge">Firebase</div>
+        </div>
+      </div>
+      
+      <!-- PROJECT 4: SIGNATURE DETECTION -->
+      <div class="project-card-small glass-card">
+        <div class="project-small-top">
+          <div class="project-icon-box"><i class="fa-solid fa-user-check"></i></div>
+          <h4>Signature Forgery Detector</h4>
+          <p>
+            Trained a ResNet-based Deep CNN classifier to inspect handwritten signatures. 
+            Curated and annotated a high-fidelity image dataset consisting of 1,200+ signatures to minimize forgery detection false-positives.
+          </p>
+        </div>
+        <div class="tech-badge-container">
+          <div class="tech-badge">ResNet</div>
+          <div class="tech-badge">CNN</div>
+          <div class="tech-badge">Computer Vision</div>
+          <div class="tech-badge">PyTorch</div>
+        </div>
+      </div>
+      
+      <!-- PROJECT 5: AKI PREDICTION -->
+      <div class="project-card-small glass-card">
+        <div class="project-small-top">
+          <div class="project-icon-box"><i class="fa-solid fa-kit-medical"></i></div>
+          <h4>Acute Kidney Injury Risk Predictor</h4>
+          <p>
+            Developed patient-monitoring ML pipelines to calculate AKI risk margins. 
+            Analyzed ICU demographics and historical medication rosters using Random Forest & Gradient Boosting models with optimized ROC-AUC metrics.
+          </p>
+        </div>
+        <div class="tech-badge-container">
+          <div class="tech-badge">Scikit-Learn</div>
+          <div class="tech-badge">Random Forest</div>
+          <div class="tech-badge">XGBoost</div>
+          <div class="tech-badge">Clinical Data</div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- --- TECHNICAL SKILLS MATRIX --- -->
+  <section id="skills">
+    <div class="section-header">
+      <div class="section-tag">Capabilities</div>
+      <h2 class="section-title"><span>Interactive Skills Matrix</span></h2>
+    </div>
+    
+    <div class="skills-matrix">
+      <!-- AI / Machine learning -->
+      <div class="skills-category glass-card">
+        <div class="category-title"><i class="fa-solid fa-brain"></i> AI & ML Systems</div>
+        <div class="category-skills-list">
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">LLMs & NLP Tooling</span>
+              <span class="skill-proficiency">92%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 92%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">Fine-Tuning (LoRA, QLoRA)</span>
+              <span class="skill-proficiency">88%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 88%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">Retrieval-Augmented (RAG)</span>
+              <span class="skill-proficiency">95%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 95%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">Reinforcement Learning</span>
+              <span class="skill-proficiency">80%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 80%;"></div></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Programming Languages -->
+      <div class="skills-category glass-card">
+        <div class="category-title"><i class="fa-solid fa-code"></i> Languages</div>
+        <div class="category-skills-list">
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">Python (PyTorch / ML Stack)</span>
+              <span class="skill-proficiency">95%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 95%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">Golang (Identity, APIs)</span>
+              <span class="skill-proficiency">90%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 90%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">Java (Spring Boot / APIs)</span>
+              <span class="skill-proficiency">85%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 85%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">JavaScript & C</span>
+              <span class="skill-proficiency">78%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 78%;"></div></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Backend & APIs -->
+      <div class="skills-category glass-card">
+        <div class="category-title"><i class="fa-solid fa-gears"></i> Backend Engine</div>
+        <div class="category-skills-list">
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">REST API Architecture</span>
+              <span class="skill-proficiency">94%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 94%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">OAuth 2.0 / Ory Hydra</span>
+              <span class="skill-proficiency">90%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 90%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">Microservices & Gateway</span>
+              <span class="skill-proficiency">88%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 88%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">DB tuning (Index, Postgres)</span>
+              <span class="skill-proficiency">86%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 86%;"></div></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Cloud & GIS tools -->
+      <div class="skills-category glass-card">
+        <div class="category-title"><i class="fa-solid fa-cloud"></i> Cloud & GIS</div>
+        <div class="category-skills-list">
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">AWS (ECS, EKS, IAM)</span>
+              <span class="skill-proficiency">85%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 85%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">Docker & CI/CD Pipelines</span>
+              <span class="skill-proficiency">90%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 90%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">Prometheus & Grafana</span>
+              <span class="skill-proficiency">88%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 88%;"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-info">
+              <span class="skill-name">GIS (OpenStreetMap)</span>
+              <span class="skill-proficiency">82%</span>
+            </div>
+            <div class="skill-bar-outer"><div class="skill-bar-inner" style="width: 82%;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scrolling technology marquee -->
+    <div class="marquee-container">
+      <div class="marquee-content">
+        <!-- Original block -->
+        <div class="marquee-item"><i class="fa-brands fa-python"></i> PyTorch</div>
+        <div class="marquee-item"><i class="fa-solid fa-robot"></i> Hugging Face</div>
+        <div class="marquee-item"><i class="fa-brands fa-golang"></i> Go (Golang)</div>
+        <div class="marquee-item"><i class="fa-brands fa-aws"></i> AWS ECS/EKS</div>
+        <div class="marquee-item"><i class="fa-brands fa-docker"></i> Docker Containers</div>
+        <div class="marquee-item"><i class="fa-solid fa-database"></i> VectorDB (Qdrant)</div>
+        <div class="marquee-item"><i class="fa-solid fa-brain"></i> Instruction Tuning</div>
+        <div class="marquee-item"><i class="fa-solid fa-key"></i> OAuth 2.0 Auth</div>
+        <div class="marquee-item"><i class="fa-solid fa-network-wired"></i> Kafka Queues</div>
+        <div class="marquee-item"><i class="fa-solid fa-compass"></i> GIS (OpenStreetMap)</div>
+        
+        <!-- Duplicated block to make scroll seamless -->
+        <div class="marquee-item"><i class="fa-brands fa-python"></i> PyTorch</div>
+        <div class="marquee-item"><i class="fa-solid fa-robot"></i> Hugging Face</div>
+        <div class="marquee-item"><i class="fa-brands fa-golang"></i> Go (Golang)</div>
+        <div class="marquee-item"><i class="fa-brands fa-aws"></i> AWS ECS/EKS</div>
+        <div class="marquee-item"><i class="fa-brands fa-docker"></i> Docker Containers</div>
+        <div class="marquee-item"><i class="fa-solid fa-database"></i> VectorDB (Qdrant)</div>
+        <div class="marquee-item"><i class="fa-solid fa-brain"></i> Instruction Tuning</div>
+        <div class="marquee-item"><i class="fa-solid fa-key"></i> OAuth 2.0 Auth</div>
+        <div class="marquee-item"><i class="fa-solid fa-network-wired"></i> Kafka Queues</div>
+        <div class="marquee-item"><i class="fa-solid fa-compass"></i> GIS (OpenStreetMap)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- CONTACT & INTERACTIVE TERMINAL --- -->
+  <section id="contact">
+    <div class="section-header">
+      <div class="section-tag">Operator Access</div>
+      <h2 class="section-title"><span>Contact & Terminal Operations</span></h2>
+    </div>
+    
+    <div class="contact-grid">
+      <!-- Standard beautiful form -->
+      <div class="contact-card-form glass-card">
+        <h3>Initiate Contact Request</h3>
+        <p>Submit your message and the platform router will dispatch an alert event directly to Riwaz's terminal feed.</p>
+        
+        <form id="contact-form" onsubmit="event.preventDefault(); triggerFormContact();">
+          <div class="form-group">
+            <label for="form-name">Caller Identity (Name)</label>
+            <input type="text" id="form-name" required placeholder="Dr. John Doe / Senior Technical Recruiter">
+          </div>
+          <div class="form-group">
+            <label for="form-email">Routing Endpoint (Email)</label>
+            <input type="email" id="form-email" required placeholder="contact@company.com">
+          </div>
+          <div class="form-group">
+            <label for="form-msg">Payload Message</label>
+            <textarea id="form-msg" rows="5" required placeholder="Hello Riwaz, we reviewed your legal RAG self-healing model and Byju's OAuth scaling experience..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary form-submit-btn">
+            Dispatch Event Payload <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+      
+      <!-- Interactive Operator Console (Terminal Widget) -->
+      <div class="terminal-widget" id="cli-widget">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+          </div>
+          <div class="terminal-title">riwaz@operator:~/portfolio_v1</div>
+          <div class="terminal-status-light">
+            <div class="status-pulse"></div>
+            Node Active
+          </div>
+        </div>
+        
+        <div class="terminal-body" id="terminal-body">
+          <div class="terminal-line terminal-text-muted">Initializing neural network weights... [SUCCESS]</div>
+          <div class="terminal-line terminal-text-muted">Establishing secure telemetry tunnel... [SUCCESS]</div>
+          <div class="terminal-line terminal-text-white">Welcome to Operator OS v1.2.0. Built for Riwaz Udas.</div>
+          <div class="terminal-line">Type <span class="terminal-text-cyan">help</span> to list all available technical routines. Try clicking the keywords in the text above to auto-trigger logs!</div>
+          
+          <div class="terminal-input-row" id="terminal-input-row">
+            <span class="terminal-prompt">riwaz@operator:~$</span>
+            <input type="text" class="terminal-input" id="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- --- FOOTER --- -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-logo">
+        <span class="logo-highlight">[R]</span> RIWAZ.AI
+      </div>
+      <div class="footer-copyright">
+        &copy; 2026 Riwaz Udas. All Systems Operational. Crafted with premium HSL glass components.
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/riwazudas" target="_blank" class="footer-link">GitHub</a>
+        <a href="https://www.linkedin.com/in/riwaz-udas-7aab521b1/" target="_blank" class="footer-link">LinkedIn</a>
+        <a href="mailto:udasriwaz@gmail.com" class="footer-link">Mail</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- --- GSAP ANIMATION LIBRARIES FROM CDN --- -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  
+  <!-- Custom Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
