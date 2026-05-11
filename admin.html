@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin AI Control Console | Riwaz Udas</title>
+  
+  <!-- CSS Styling & Fonts -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* Specific Admin Console Overrides */
+    body {
+      background-color: #030303;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-navbar {
+      background: rgba(10, 10, 10, 0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1.2rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-container {
+      max-width: 1400px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+      width: 100%;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .admin-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .admin-header {
+      margin-bottom: 2rem;
+    }
+
+    .admin-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .admin-panel {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-terminal {
+      background-color: #050505;
+      border: 1px solid var(--glass-border);
+      border-radius: var(--card-radius);
+      padding: 1.5rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: #39FF14; /* Matrix Green */
+      height: 320px;
+      overflow-y: auto;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+      margin-top: 1.5rem;
+      border-top: 4px solid var(--accent-cyan);
+    }
+
+    .admin-terminal::-webkit-scrollbar {
+      width: 6px;
+    }
+    .admin-terminal::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    .admin-terminal-line {
+      margin-bottom: 0.4rem;
+      line-height: 1.4;
+    }
+
+    .admin-terminal-line.info { color: #88c0d0; }
+    .admin-terminal-line.success { color: #a3be8c; }
+    .admin-terminal-line.error { color: #bf616a; }
+    .admin-terminal-line.warn { color: #ebcb8b; }
+
+    .db-chunks-panel {
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-radius: var(--card-radius);
+      padding: 1.8rem;
+      height: calc(100vh - 200px);
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .db-chunks-list-scroll {
+      flex: 1;
+      overflow-y: auto;
+      margin-top: 1.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .db-chunks-list-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .db-chunks-list-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+
+    .admin-btn-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .stat-badge-val {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .stat-badge-lbl {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .admin-stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tag-pill {
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      color: var(--accent-cyan);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .db-chunk-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 1.2rem;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .db-chunk-item:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(0, 255, 255, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .db-chunk-item-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      padding-bottom: 0.5rem;
+    }
+
+    .db-chunk-item-vector {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .db-chunk-item-vector.text-muted {
+      color: var(--text-muted) !important;
+    }
+
+    .db-chunk-item-body {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-family: 'Inter', sans-serif;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="admin-navbar">
+    <div class="nav-logo" style="font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 800;">
+      <span style="color: var(--accent-cyan); font-weight: 900;">[R]</span> RIWAZ.AI <span style="font-size: 0.8rem; font-weight: 400; opacity: 0.5; margin-left: 0.5rem; letter-spacing: 0.1em;">ADMIN CONTROL PANEL</span>
+    </div>
+    <a href="index.html" class="btn btn-secondary compact-btn">
+      <i class="fa-solid fa-arrow-left"></i> Return to Portfolio
+    </a>
+  </nav>
+
+  <!-- CONTAINER -->
+  <main class="admin-container">
+    
+    <!-- LEFT PANEL: CONTROLLER -->
+    <div class="admin-panel">
+      <div class="admin-header">
+        <h1 class="admin-title">RAG Engine Controller</h1>
+        <p class="admin-subtitle">Extract, chunk, clean, and vectorize Riwaz's LaTeX resume database directory in real-time.</p>
+      </div>
+
+      <!-- Settings Block -->
+      <div class="glass-card" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+        <h3 style="margin-bottom: 1rem; font-family: 'Outfit', sans-serif; font-size: 1.1rem; display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-sliders" style="color: var(--accent-cyan);"></i> Gemini Configuration Sync
+        </h3>
+        
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label style="font-size: 0.8rem; margin-bottom: 0.4rem; display: block; color: var(--text-muted);">Google Gemini API Key</label>
+          <div class="api-input-wrapper">
+            <input type="password" id="admin-api-key" placeholder="AIzaSy..." style="background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); padding: 0.6rem 1rem; color: #fff; width: 100%; border-radius: 6px;">
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; display: block;">Loads from your portfolio settings automatically. Saves back securely.</span>
+        </div>
+
+        <div class="form-group">
+          <label style="font-size: 0.8rem; margin-bottom: 0.4rem; display: block; color: var(--text-muted);">Embedding Generator Model</label>
+          <select id="admin-model" style="background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); padding: 0.6rem 1rem; color: #fff; width: 100%; border-radius: 6px;">
+            <option value="text-embedding-004">models/text-embedding-004 (768-D)</option>
+          </select>
+        </div>
+        
+        <button class="btn btn-secondary compact-btn" onclick="saveAdminSettings()" style="margin-top: 1rem; width: 100%;">
+          <i class="fa-solid fa-floppy-disk"></i> Sync & Save Settings
+        </button>
+      </div>
+
+      <!-- Compilation Center -->
+      <div class="glass-card" style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column;">
+        <h3 style="margin-bottom: 1rem; font-family: 'Outfit', sans-serif; font-size: 1.1rem; display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-gears" style="color: var(--accent-purple);"></i> LaTeX Compiler Core
+        </h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">
+          Processes the local LaTeX <a href="resume.md" target="_blank" style="color: var(--accent-cyan); text-decoration: underline;">resume.md</a> source file. Performs tokenization, strips syntax wrappers, constructs semantic blocks, and registers high-dimensional embeddings via Google's neural gateway.
+        </p>
+
+        <div class="admin-btn-row">
+          <button class="btn btn-primary" onclick="compileLatexResume()" style="flex: 1; box-shadow: 0 0 20px rgba(0, 255, 255, 0.25);">
+            <i class="fa-solid fa-file-invoice" style="margin-right: 0.5rem;"></i> Ingest & Re-embed resume.md
+          </button>
+        </div>
+
+        <!-- CLI Console Log -->
+        <div class="admin-terminal" id="admin-terminal">
+          <div class="admin-terminal-line success">[SYSTEM INITIALIZED] Standing by for Admin routing instructions.</div>
+          <div class="admin-terminal-line info">[STATUS] Connect your Gemini API Key above to allow live neural embedding generations.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: CURRENT DATABASE -->
+    <div class="db-chunks-panel">
+      <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; display: flex; align-items: center; gap: 0.6rem;">
+        <i class="fa-solid fa-database" style="color: var(--accent-cyan);"></i> Active Vector Database View
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">
+        Review your client-side knowledge blocks. If a vector matches, it carries a full 768-D projection.
+      </p>
+
+      <!-- Stat Badges Row -->
+      <div class="admin-stat-row" style="margin-top: 1.2rem;">
+        <div class="stat-badge">
+          <div>
+            <div class="stat-badge-val" id="stat-chunks-count">0</div>
+            <div class="stat-badge-lbl">Total Chunks</div>
+          </div>
+        </div>
+        <div class="stat-badge">
+          <div>
+            <div class="stat-badge-val" id="stat-vectors-count">0</div>
+            <div class="stat-badge-lbl">Embedded</div>
+          </div>
+        </div>
+        <div class="stat-badge">
+          <div>
+            <div class="stat-badge-val" id="stat-source-type">Default</div>
+            <div class="stat-badge-lbl">Source State</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chunks scroll list -->
+      <div class="db-chunks-list-scroll" id="admin-chunks-list">
+        <!-- Chunks are dynamically rendered here -->
+      </div>
+
+      <div class="admin-btn-row" style="border-top: 1px solid var(--glass-border); padding-top: 1.2rem; margin-top: auto;">
+        <button class="btn btn-secondary" onclick="purgeCustomDatabase()" style="width: 100%; border-color: rgba(239, 68, 68, 0.2); color: #ef4444;">
+          <i class="fa-solid fa-trash-can"></i> Purge Custom Indices & Reset Defaults
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT LATEX PROCESSOR ENGINE -->
+  <script>
+    // Copy of initial defaults to fallback to
+    const defaultChunks = [
+      { tag: "SUMMARY", text: "Riwaz Udas holds a Master of Computer Science from the University of Melbourne specialized in LLMs, multimodal ML, and geospatial AI systems." },
+      { tag: "AI_SKILLS", text: "ML Tools: PyTorch, TensorFlow, Scikit-learn, Reinforcement Learning (PPO, SAC, A2C, IMPALA). LLM Tooling: Hugging Face, instruction tuning, LoRA, RAG." },
+      { tag: "BACKEND_SKILLS", text: "Languages & Frameworks: Go, Python, Java, JavaScript, C, Spring Boot, FastAPI, NodeJS. Integrations: OAuth 2.0, Ory Hydra, microservices." },
+      { tag: "EXP_BYJUS", text: "Work at Byju's as MTS I: Scaled identity validation systems. Implemented sliding-window Go rate-limiter middleware. Automated cleanups for 100M+ Ory records annually." },
+      { tag: "EXP_INTERN", text: "Work at Byju's as Intern: Built Go identity platform workflows. Integrated Prometheus custom metrics and constructed 15+ Grafana alerts." },
+      { tag: "EXP_QUANTUM", text: "Quantum AI Cloud Intern: Researched RL frameworks (A2C, PPO, SAC) for workload orchestrators." },
+      { tag: "PROJ_THESIS", text: "Master's Thesis: Geotagging systems via fine-tuned Gemma-7B, LLaMA-8B, and Mistral-7B models using PyTorch & LoRA." },
+      { tag: "PROJ_NEPAL_LAW", text: "Project Nepal Law AI: Built bilingual (English/Nepali) legal RAG chatbot with self-healing web scraper ingestion pipelines." }
+    ];
+
+    let activeChunks = [];
+    let cachedEmbeddings = {};
+    let apiKey = "";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Load configuration from localStorage
+      apiKey = localStorage.getItem("gemini_rag_apikey") || "";
+      const keyInput = document.getElementById("admin-api-key");
+      if (keyInput) keyInput.value = apiKey;
+
+      // Load cached embeddings
+      const rawCache = localStorage.getItem("gemini_rag_embeddings");
+      if (rawCache) {
+        try { cachedEmbeddings = JSON.parse(rawCache); } catch(e) {}
+      }
+
+      loadActiveDatabase();
+    });
+
+    /**
+     * Loads chunk arrays from localStorage or defaults
+     */
+    function loadActiveDatabase() {
+      const rawCustom = localStorage.getItem("chatbot_custom_resume_chunks");
+      const statusLbl = document.getElementById("stat-source-type");
+      
+      if (rawCustom) {
+        try {
+          activeChunks = JSON.parse(rawCustom);
+          if (statusLbl) statusLbl.textContent = "Custom LaTeX";
+        } catch(e) {
+          console.error("Failed to parse custom resume, resetting defaults", e);
+          activeChunks = [...defaultChunks];
+          if (statusLbl) statusLbl.textContent = "Defaults";
+        }
+      } else {
+        activeChunks = [...defaultChunks];
+        if (statusLbl) statusLbl.textContent = "Defaults";
+      }
+
+      renderChunksList();
+    }
+
+    /**
+     * Renders chunks into the scrolling layout directory
+     */
+    function renderChunksList() {
+      const container = document.getElementById("admin-chunks-list");
+      const countLabel = document.getElementById("stat-chunks-count");
+      const embedLabel = document.getElementById("stat-vectors-count");
+
+      if (!container) return;
+      container.innerHTML = "";
+
+      if (countLabel) countLabel.textContent = activeChunks.length;
+
+      let embeddedCount = 0;
+
+      activeChunks.forEach((chunk, index) => {
+        const hasVector = cachedEmbeddings[chunk.text] ? true : false;
+        if (hasVector) embeddedCount++;
+
+        const item = document.createElement("div");
+        item.className = "db-chunk-item";
+        item.style.marginBottom = "0.8rem";
+        
+        const vectorStatus = hasVector
+          ? `<span class="db-chunk-item-vector"><i class="fa-solid fa-circle-nodes" style="color: var(--accent-cyan);"></i> Embedded (768-D)</span>`
+          : `<span class="db-chunk-item-vector text-muted"><i class="fa-solid fa-circle"></i> Vector Pending</span>`;
+
+        item.innerHTML = `
+          <div class="db-chunk-item-hdr">
+            <span class="tag-pill">${chunk.tag}</span>
+            ${vectorStatus}
+          </div>
+          <div class="db-chunk-item-body">${chunk.text}</div>
+        `;
+        container.appendChild(item);
+      });
+
+      if (embedLabel) embedLabel.textContent = embeddedCount;
+    }
+
+    /**
+     * Save key configuration securely
+     */
+    function saveAdminSettings() {
+      const keyInput = document.getElementById("admin-api-key");
+      if (!keyInput) return;
+
+      apiKey = keyInput.value.trim();
+      localStorage.setItem("gemini_rag_apikey", apiKey);
+      
+      alert("Admin settings updated and synced with portfolio core structures! Neural gateways active.");
+      logTerminal("[CONFIG] Local API Key updated and registered in browser storage.", "info");
+    }
+
+    /**
+     * Terminal Log Simulator Helper
+     */
+    function logTerminal(message, type = "info") {
+      const term = document.getElementById("admin-terminal");
+      if (!term) return;
+
+      const line = document.createElement("div");
+      line.className = `admin-terminal-line ${type}`;
+      line.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+      term.appendChild(line);
+      term.scrollTop = term.scrollHeight;
+    }
+
+    /**
+     * Custom LaTeX Syntax Cleaner Parser
+     */
+    function cleanLatexMarkup(rawText) {
+      let text = rawText;
+      
+      // Remove comments
+      text = text.replace(/%[^\n]*/g, '');
+      
+      // Remove document preamble and settings
+      text = text.replace(/\\documentclass[\s\S]*?\\begin\{document\}/, '');
+      text = text.replace(/\\end\{document\}/, '');
+      
+      // Clean up custom subheadings \resumeSubheading{Byju's}{Oct 2023...}{Member...}{Bangalore...}
+      text = text.replace(/\\resumeSubheading\s*\{([\s\S]*?)\}\s*\{([\s\S]*?)\}\s*\{([\s\S]*?)\}\s*\{([\s\S]*?)\}/g, (match, p1, p2, p3, p4) => {
+        return `\n[ENTRY] ${p1.trim()} (${p2.trim()}) | ${p3.trim()} | ${p4.trim()}\n`;
+      });
+      
+      // Clean up custom projects subheadings \resumeProjectHeading{Nepal Law AI...}{...}
+      text = text.replace(/\\resumeProjectHeading\s*\{([\s\S]*?)\}\s*\{([\s\S]*?)\}/g, (match, p1, p2) => {
+        return `\n[ENTRY] ${p1.trim()} | ${p2.trim()}\n`;
+      });
+      
+      // Clean up custom item lines \resumeItem{content}
+      text = text.replace(/\\resumeItem\s*\{([\s\S]*?)\}/g, (match, p1) => {
+        return `• ${p1.trim().replace(/\s+/g, ' ')}\n`;
+      });
+
+      // Clean standard inline markup tags (\textbf, \textit, \small, \href)
+      text = text.replace(/\\textbf\s*\{([\s\S]*?)\}/g, '$1');
+      text = text.replace(/\\textit\s*\{([\s\S]*?)\}/g, '$1');
+      text = text.replace(/\\small\s*\{([\s\S]*?)\}/g, '$1');
+      text = text.replace(/\\texttt\s*\{([\s\S]*?)\}/g, '$1');
+      text = text.replace(/\\href\s*\{([\s\S]*?)\}\s*\{([\s\S]*?)\}/g, '$2');
+      
+      // Strip brackets and leftover macros
+      text = text.replace(/\\begin\{itemize\}[\s\S]*?\}|\\end\{itemize\}|\\resumeItemListStart|\\resumeItemListEnd|\\resumeSubHeadingListStart|\\resumeSubHeadingListEnd/g, '');
+      text = text.replace(/\\[a-zA-Z]+\*?/g, ''); // Strip remaining backslash macros
+      text = text.replace(/\{|\}/g, ''); // Strip leftover matching brackets
+      text = text.replace(/\s*\|\|\s*|\s*\|\s*/g, ' | '); // Balance vertical bars
+      text = text.replace(/\n\s*\n+/g, '\n\n'); // Contract extra newlines
+      
+      return text.trim();
+    }
+
+    /**
+     * Chunk resume into logical, RAG semantic paragraphs
+     */
+    function segmentResumeIntoChunks(rawText) {
+      const sections = [];
+      const sectionMatches = [...rawText.matchAll(/\\section\{([\s\S]*?)\}/g)];
+      
+      for (let i = 0; i < sectionMatches.length; i++) {
+        const currentMatch = sectionMatches[i];
+        const sectionName = currentMatch[1].trim();
+        const startIndex = currentMatch.index + currentMatch[0].length;
+        const endIndex = (i + 1 < sectionMatches.length) ? sectionMatches[i + 1].index : rawText.length;
+        
+        const sectionBody = rawText.substring(startIndex, endIndex);
+        sections.push({ name: sectionName, body: sectionBody });
+      }
+      
+      const chunks = [];
+      
+      sections.forEach(sec => {
+        const cleanedBody = cleanLatexMarkup(sec.body);
+        
+        if (sec.name === "PROFESSIONAL SUMMARY") {
+          chunks.push({
+            tag: "SUMMARY",
+            text: `Riwaz Udas - Professional Summary: ${cleanedBody}`
+          });
+        } else if (sec.name === "TECHNICAL SKILLS") {
+          const lines = cleanedBody.split('\n').map(l => l.trim()).filter(l => l.length > 5);
+          if (lines.length > 0) {
+            chunks.push({
+              tag: "AI_SKILLS",
+              text: `Riwaz Udas - AI, Machine Learning, and LLM Tooling: \n` + lines.slice(0, 2).join('\n')
+            });
+            chunks.push({
+              tag: "BACKEND_SKILLS",
+              text: `Riwaz Udas - Systems Software Engineering, Programming, and DB Skills: \n` + lines.slice(2).join('\n')
+            });
+          }
+        } else if (sec.name === "EXPERIENCE") {
+          const entries = cleanedBody.split('[ENTRY]').map(e => e.trim()).filter(e => e.length > 10);
+          entries.forEach((entry, idx) => {
+            // Further refine tags for specific companies
+            let tag = `EXP_COMPANY_${idx + 1}`;
+            if (entry.toLowerCase().includes("byju")) {
+              tag = idx === 0 ? "EXP_BYJUS_MTS" : "EXP_BYJUS_INTERN";
+            } else if (entry.toLowerCase().includes("quantum")) {
+              tag = "EXP_QUANTUM_AI";
+            }
+            chunks.push({
+              tag: tag,
+              text: `Riwaz Udas - Professional Work Experience Block:\n${entry}`
+            });
+          });
+        } else if (sec.name === "PROJECTS") {
+          const entries = cleanedBody.split('[ENTRY]').map(e => e.trim()).filter(e => e.length > 10);
+          entries.forEach((entry, idx) => {
+            let tag = `PROJ_BLOCK_${idx + 1}`;
+            if (entry.toLowerCase().includes("geotag")) tag = "PROJ_THESIS";
+            else if (entry.toLowerCase().includes("nepal")) tag = "PROJ_NEPAL_LAW_AI";
+            else if (entry.toLowerCase().includes("sentiment")) tag = "PROJ_SENTIMENT";
+            else if (entry.toLowerCase().includes("signature")) tag = "PROJ_SIGNATURE";
+            else if (entry.toLowerCase().includes("kidney") || entry.toLowerCase().includes("aki")) tag = "PROJ_AKI_PREDICTION";
+            
+            chunks.push({
+              tag: tag,
+              text: `Riwaz Udas - Project Technical Details:\n${entry}`
+            });
+          });
+        } else if (sec.name === "EDUCATION") {
+          chunks.push({
+            tag: "EDUCATION",
+            text: `Riwaz Udas - Academic Credentials & Degrees:\n${cleanedBody}`
+          });
+        } else {
+          chunks.push({
+            tag: sec.name.replace(/\s+/g, '_').substring(0, 15).toUpperCase(),
+            text: `Riwaz Udas - Section ${sec.name}:\n${cleanedBody}`
+          });
+        }
+      });
+      
+      return chunks;
+    }
+
+    /**
+     * Primary Compile Process Action
+     */
+    async function compileLatexResume() {
+      logTerminal("[PARSER] Initializing resume.md extraction thread...", "info");
+      
+      try {
+        const response = await fetch("./resume.md");
+        if (!response.ok) {
+          throw new Error(`Failed to load file resume.md: HTTP ${response.status}`);
+        }
+        
+        const rawText = await response.text();
+        logTerminal(`[PARSER] Raw document bytes read: ${rawText.length} characters.`, "info");
+        
+        // Run cleaning & segmenting
+        logTerminal("[PARSER] Cleaning LaTeX formatting blocks and environments...", "info");
+        const compiledChunks = segmentResumeIntoChunks(rawText);
+        logTerminal(`[PARSER] Dynamic segmentation complete. Generated ${compiledChunks.length} target RAG semantic units.`, "success");
+
+        // Save customized chunks list
+        localStorage.setItem("chatbot_custom_resume_chunks", JSON.stringify(compiledChunks));
+        activeChunks = compiledChunks;
+        renderChunksList();
+
+        // Check key status to prompt embedding
+        if (!apiKey) {
+          logTerminal("[WARNING] No API key detected. Skipping neural vectorization. System will default to Keyword overlap simulation offline.", "warn");
+          alert("Ingestion complete! Resume chunks have been loaded. Please connect a Gemini API key if you want to generate high-dimensional embeddings.");
+          return;
+        }
+
+        // Loop and embed
+        logTerminal("[EMBEDDING] Synced API Key detected. Commencing bulk vectorization queue...", "info");
+        
+        let successCount = 0;
+        let failCount = 0;
+
+        for (let i = 0; i < activeChunks.length; i++) {
+          const chunk = activeChunks[i];
+          
+          // If already in cache, skip API query
+          if (cachedEmbeddings[chunk.text]) {
+            logTerminal(`[CACHE] Match found for tag [${chunk.tag}] - Chunk #${i + 1}/${activeChunks.length}. Skipping API call.`, "success");
+            successCount++;
+            continue;
+          }
+
+          logTerminal(`[API] Fetching embedding coordinate map for tag [${chunk.tag}] - Chunk #${i + 1}/${activeChunks.length}...`, "info");
+          
+          try {
+            const vector = await callGeminiEmbeddingApi(chunk.text);
+            if (vector) {
+              cachedEmbeddings[chunk.text] = vector;
+              successCount++;
+              // Save cache incrementally
+              localStorage.setItem("gemini_rag_embeddings", JSON.stringify(cachedEmbeddings));
+              renderChunksList();
+            } else {
+              throw new Error("No array values returned.");
+            }
+          } catch(err) {
+            logTerminal(`[ERROR] Chunk #${i + 1} vector generation failed: ${err.message}`, "error");
+            failCount++;
+          }
+
+          // Small sleep to keep within quota limits
+          await new Promise(r => setTimeout(r, 250));
+        }
+
+        logTerminal(`[EMBEDDING] Queue flushed. Successful embeddings: ${successCount}. Failures: ${failCount}.`, "success");
+        alert(`Resume parsed and fully embedded! Database now tracks ${activeChunks.length} active units inside local memory space.`);
+
+      } catch (e) {
+        logTerminal(`[CRITICAL] Compiling execution halt: ${e.message}`, "error");
+        alert(`Compilation halted: ${e.message}`);
+      }
+    }
+
+    /**
+     * Call embedding REST gateway
+     */
+    async function callGeminiEmbeddingApi(text) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${apiKey}`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "models/text-embedding-004",
+          content: { parts: [{ text: text }] }
+        })
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`HTTP ${response.status} - ${errText}`);
+      }
+
+      const data = await response.json();
+      return data?.embedding?.values || null;
+    }
+
+    /**
+     * Resets database back to default static segments
+     */
+    function purgeCustomDatabase() {
+      if (confirm("Are you sure you want to clear your customized resume index and reset the chatbot database back to original portfolio vectors?")) {
+        localStorage.removeItem("chatbot_custom_resume_chunks");
+        loadActiveDatabase();
+        logTerminal("[RESET] Custom indices purged. System has reverted back to standard portfolio vectors.", "warn");
+        alert("System memory purged! Reverted successfully.");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -836,6 +836,54 @@
     </div>
   </footer>
 
+  <!-- --- FLOATING GEMINI RAG CHATBOT --- -->
+  <div class="ai-chatbot-widget" id="ai-chatbot-widget">
+    <!-- Pulsing FAB -->
+    <button class="chatbot-fab" id="chatbot-fab" onclick="toggleChatbot()" title="Open Riwaz's AI Assistant">
+      <i class="fa-solid fa-sparkles"></i>
+      <span class="fab-pulse-ring"></span>
+    </button>
+    
+    <!-- Expanded Chat Container -->
+    <div class="chatbot-panel glass-card hidden" id="chatbot-panel">
+      <!-- Header -->
+      <div class="chatbot-header">
+        <div class="chatbot-header-info">
+          <div class="chatbot-avatar">
+            <i class="fa-solid fa-robot"></i>
+            <span class="active-status-dot"></span>
+          </div>
+          <div>
+            <div class="chatbot-header-name">Riwaz's AI Agent</div>
+            <div class="chatbot-header-status" id="chatbot-api-status">API Key: Standard Mock Mode</div>
+          </div>
+        </div>
+        <button class="chatbot-close-btn" onclick="toggleChatbot()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <!-- Direct Conversational Area -->
+      <div class="chatbot-content-area">
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-message assistant">
+            Hi! I am Riwaz's RAG-powered AI Representative. Ask me anything about his credentials, Master's thesis, or experience in Ory Hydra and distributed scaling!
+          </div>
+        </div>
+        
+        <!-- Prompt Chips -->
+        <div class="chat-prompt-chips">
+          <button class="prompt-chip" onclick="sendPromptChip('Tell me about his Master\'s thesis')">Thesis</button>
+          <button class="prompt-chip" onclick="sendPromptChip('What are his skills in Go?')">Go Skill</button>
+          <button class="prompt-chip" onclick="sendPromptChip('What did he do at Byju\'s?')">Byju's</button>
+        </div>
+        
+        <!-- Input Area -->
+        <div class="chat-input-container">
+          <input type="text" id="chat-input" placeholder="Type a question..." onkeydown="if(event.key === 'Enter') sendChatMessage()">
+          <button class="chat-send-btn" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- --- GSAP ANIMATION LIBRARIES FROM CDN --- -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>

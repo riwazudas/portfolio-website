@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initHeroTypewriter();
   initScrollAnimations();
   initTerminalCLI();
+  initAIHelperChatbot();
   
   // Trigger initial RAG simulation
   runRagSimulation('court');
@@ -667,3 +668,472 @@ function triggerFormContact() {
   // Trigger nice window alert
   alert("Message Payload Dispatched! Check the terminal console to view the telemetry log of your event.");
 }
+
+/* =========================================================================
+   8. CLIENT-SIDE GEMINI RAG CHATBOT CONTROLLER
+   ========================================================================= */
+
+// Initial Semantic Knowledge Base Chunks (Pre-processed plain-text resume blocks)
+const initialResumeChunks = [
+  {
+    tag: "SUMMARY",
+    text: "Riwaz Udas is an AI Engineer with a Master's degree in Computer Science from the University of Melbourne, specializing in Large Language Models, multimodal machine learning, and geospatial AI systems. Experienced in fine-tuning and deploying transformer models using PyTorch and Hugging Face, and building production-grade backend systems using Go and Spring Boot. Strong background in scalable APIs, authentication infrastructure, database optimization, and monitoring systems."
+  },
+  {
+    tag: "AI_SKILLS",
+    text: "Artificial Intelligence and Machine Learning Skills: PyTorch, TensorFlow, Scikit-learn, Reinforcement Learning (PPO, SAC, A2C, IMPALA). LLM & NLP Tooling: Hugging Face Transformers, Prompt Engineering, Instruction Tuning, LoRA Fine-tuning, Retrieval-Augmented Generation (RAG)."
+  },
+  {
+    tag: "BACKEND_SKILLS",
+    text: "Programming Languages & Backend Tools: Python, Go, Java, JavaScript, C, C#. Databases: PostgreSQL, MySQL, MongoDB, Query Optimization, Indexing, Vector Databases. Backend & APIs: Spring Boot, FastAPI, NodeJS, REST API Design, OAuth 2.0 Security, Identity Systems, and Microservices. DevOps & Cloud: AWS, Google Cloud, Firebase, Kafka, Linux, Git, Docker, Kubernetes, Prometheus, Grafana."
+  },
+  {
+    tag: "EXP_BYJUS_MTS",
+    text: "Experience at Byju's (Bangalore, India) as Member of Technical Staff I (Oct 2023 - Jan 2024): Developed and maintained auth/authz systems based on OAuth 2.0 using Ory Hydra. Designed and maintained 30+ production REST APIs supporting identity services used across large-scale products. Coordinated third-party mobile OTP login-link systems. Implemented Go sliding-window rate limiting middleware blocking 50K+ malicious requests. Automated cleanups for OAuth records in Ory Hydra using Go, processing 100M+ records annually. Optimized SQL queries for databases supporting 2M+ daily active users. Containerized microservices using Docker and deployed them on AWS ECS/EKS with GitHub Actions CI/CD."
+  },
+  {
+    tag: "EXP_BYJUS_INTERN",
+    text: "Experience at Byju's as Software Engineering Intern (Jan 2023 - Sep 2023): Contributed to a Golang-based OAuth 2.0 identity platform responsible for login flows across 10+ internal products. Integrated Prometheus custom metrics to monitor request latency, authentication failures, and API throughput across 30+ APIs. Constructed Grafana observability dashboards and alert pipelines with 15+ automated alert configurations."
+  },
+  {
+    tag: "EXP_QUANTUM_AI",
+    text: "Experience at Quantum AI Cloud (Melbourne, Australia) as Research Intern (Jul 2024 - Sep 2024): Developed reinforcement learning frameworks for intelligent task scheduling in quantum cloud computing environments. Implemented and benchmarked advanced RL algorithms including A2C, PPO, SAC, and IMPALA for dynamic workload allocation on hybrid classical-quantum hardware."
+  },
+  {
+    tag: "PROJ_THESIS",
+    text: "Master's Thesis Project: Social Media Geotagging using Large Language Models at the University of Melbourne. Designed a multimodal geolocation prediction system combining textual signals, metadata, and hierarchical location structures. Fine-tuned Gemma-7B, LLaMA-8B, and Mistral-7B transformer models using PyTorch, Hugging Face, instruction tuning, prompt engineering, and LoRA-based fine-tuning over a dataset of millions of Australian geotagged posts."
+  },
+  {
+    tag: "PROJ_NEPAL_LAW_AI",
+    text: "Project: Nepal Law AI Chatbot & Ingestion Pipeline using Retrieval-Augmented Generation (RAG). Built a self-healing legal assistant capable of answering bilingual (English/Nepali) legislative queries. Developed autonomous web scrapers to collect legal codes from online repositories. Integrated multilingual embedding models and semantic vector search. Constructed automated knowledge-base self-repair pipelines to detect outdated legal files, refresh embeddings, and resolve match anomalies."
+  },
+  {
+    tag: "PROJ_SENTIMENT",
+    text: "Project: Sentiment Analysis Web Application. Fine-tuned a BERT transformer model using Hugging Face Transformers for restaurant review sentiment classification. Developed a FastAPI-based inference REST service and deployed a React frontend via Firebase Hosting and Cloud Functions."
+  },
+  {
+    tag: "PROJ_SIGNATURE",
+    text: "Project: Signature Forgery Detection using CNN. Trained a ResNet-based Convolutional Neural Network (CNN) in PyTorch to analyze and identify forged handwritten signatures. Constructed and labelled a custom dataset of 1200+ signatures."
+  },
+  {
+    tag: "PROJ_AKI_PREDICTION",
+    text: "Project: Acute Kidney Injury Prediction in ICU. Developed predictive machine learning models (Random Forest, Gradient Boosting classifiers) in Python to predict Acute Kidney Injury (AKI) risk from medication records, demographics, and clinical diagnostic telemetry."
+  },
+  {
+    tag: "EDUCATION",
+    text: "Education Credentials: Master of Computer Science from the University of Melbourne (Feb 2024 - Dec 2025). Coursework: Computer Vision, Distributed Systems, Advanced Databases, AI Planning for Autonomy, Machine Learning in Health. Bachelor of Technology (B.Tech) in Computer Science and Engineering from Vellore Institute of Technology, India (2019 - 2023)."
+  },
+  {
+    tag: "CERTIFICATIONS",
+    text: "Professional Certifications: Salesforce Certified AI Associate; Algorithmic Thinking (Rice University - Coursera); Artificial Intelligence Foundation Certification (NASSCOM); Big Data Foundation Certification (NASSCOM); Kotlin for Java Developers (JetBrains - Coursera)."
+  }
+];
+
+// Active State Storage
+let knowledgeBase = [];
+let geminiApiKey = "";
+let geminiModel = "gemini-2.5-flash";
+let cachedEmbeddings = {};
+
+/**
+ * Initializes the AI Chatbot mechanics, event listeners, and default Vector DB chunks
+ */
+function initAIHelperChatbot() {
+  // Load settings from storage
+  geminiApiKey = localStorage.getItem("gemini_rag_apikey") || "";
+  geminiModel = localStorage.getItem("gemini_rag_model") || "gemini-2.5-flash";
+  
+  // Load cached embeddings
+  const rawCache = localStorage.getItem("gemini_rag_embeddings");
+  if (rawCache) {
+    try {
+      cachedEmbeddings = JSON.parse(rawCache);
+    } catch (e) {
+      console.error("Failed to parse embeddings cache, resetting", e);
+      cachedEmbeddings = {};
+    }
+  }
+
+  // Initialize active knowledge base chunks (support custom resume chunks override from Admin)
+  let activeChunksList = initialResumeChunks;
+  const rawCustomResumeChunks = localStorage.getItem("chatbot_custom_resume_chunks");
+  if (rawCustomResumeChunks) {
+    try {
+      activeChunksList = JSON.parse(rawCustomResumeChunks);
+    } catch (e) {
+      console.error("Failed to parse custom resume chunks from localStorage, defaulting", e);
+    }
+  }
+
+  knowledgeBase = activeChunksList.map((chunk, index) => ({
+    id: index,
+    tag: chunk.tag,
+    text: chunk.text,
+    vector: cachedEmbeddings[chunk.text] || null
+  }));
+
+  // Merge custom facts from localStorage
+  const rawCustomFacts = localStorage.getItem("gemini_rag_custom_facts");
+  if (rawCustomFacts) {
+    try {
+      const customFacts = JSON.parse(rawCustomFacts);
+      customFacts.forEach((fact, idx) => {
+        knowledgeBase.push({
+          id: `custom_${idx}`,
+          tag: "CUSTOM_FACT",
+          text: fact,
+          vector: cachedEmbeddings[fact] || null
+        });
+      });
+    } catch (e) {
+      console.error("Failed to parse custom facts", e);
+    }
+  }
+
+  // Update Status Display
+  updateApiStatusIndicator();
+
+  // If API Key is present, trigger async background generation for missing embeddings
+  if (geminiApiKey) {
+    triggerBackgroundEmbedding();
+  }
+}
+
+/**
+ * Toggles the visibility of the expanded chatbot widget
+ */
+function toggleChatbot() {
+  const panel = document.getElementById("chatbot-panel");
+  if (!panel) return;
+
+  panel.classList.toggle("hidden");
+  
+  // Focus input if opened
+  if (!panel.classList.contains("hidden")) {
+    const input = document.getElementById("chat-input");
+    if (input) setTimeout(() => input.focus(), 100);
+  }
+}
+
+/**
+ * Updates visual badges and status indicators across panels
+ */
+function updateApiStatusIndicator() {
+  const chatStatus = document.getElementById("chatbot-api-status");
+
+  if (geminiApiKey) {
+    if (chatStatus) {
+      chatStatus.textContent = "API Status: Neural RAG Active";
+      chatStatus.style.color = "var(--accent-cyan)";
+    }
+  } else {
+    if (chatStatus) {
+      chatStatus.textContent = "API Status: Keyword Fallback Mode";
+      chatStatus.style.color = "var(--text-muted)";
+    }
+  }
+}
+
+/**
+ * Loops and generates missing vectors in the background
+ */
+async function triggerBackgroundEmbedding() {
+  if (!geminiApiKey) return;
+
+  let updated = false;
+  for (let i = 0; i < knowledgeBase.length; i++) {
+    const chunk = knowledgeBase[i];
+    if (!chunk.vector) {
+      console.log(`[RAG ENGINE] Background embedding generation for Chunk #${chunk.id}...`);
+      try {
+        const vec = await embedText(chunk.text);
+        if (vec) {
+          chunk.vector = vec;
+          cachedEmbeddings[chunk.text] = vec;
+          updated = true;
+        }
+        // Small delay to prevent API key quota exhaust
+        await new Promise(r => setTimeout(r, 200));
+      } catch (e) {
+        console.error(`Failed background embedding for chunk ${chunk.id}`, e);
+        break; // Stop loop on API errors
+      }
+    }
+  }
+
+  if (updated) {
+    localStorage.setItem("gemini_rag_embeddings", JSON.stringify(cachedEmbeddings));
+    console.log("[RAG ENGINE] All background resume vectors synced and saved successfully!");
+  }
+}
+
+/**
+ * Sends a query using standard prompt chips
+ */
+function sendPromptChip(text) {
+  const input = document.getElementById("chat-input");
+  if (input) {
+    input.value = text;
+    sendChatMessage();
+  }
+}
+
+/**
+ * Handles sending messages, running cosine similarity comparison, and invoking Gemini
+ */
+async function sendChatMessage() {
+  const input = document.getElementById("chat-input");
+  if (!input || !input.value.trim()) return;
+
+  const queryText = input.value.trim();
+  input.value = "";
+
+  // Append user bubble
+  appendChatBubble("user", queryText);
+
+  // Scroll to bottom
+  const chatMessages = document.getElementById("chat-messages");
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  // Append diagnostic log loader
+  const diagnosticId = appendDiagnosticLog("⚡ [VECTOR_DB]: Fetching query context...");
+
+  let retrievedContext = "";
+  let matchedScoresLog = "";
+
+  try {
+    if (geminiApiKey) {
+      // Step 1: Embed Query
+      updateDiagnosticLog(diagnosticId, "⚡ [VECTOR_DB]: Query embedding initiated via text-embedding-004...");
+      const queryVector = await embedText(queryText);
+      
+      if (!queryVector) {
+        throw new Error("Failed to retrieve embedding vector.");
+      }
+
+      // Step 2: Compute Cosine Similarities
+      updateDiagnosticLog(diagnosticId, "⚡ [COSINE_MATRIX]: Comparing distance values against indexed database vectors...");
+      const scoredChunks = knowledgeBase
+        .map(chunk => {
+          if (!chunk.vector) return { chunk, score: 0 };
+          return { chunk, score: cosineSimilarity(queryVector, chunk.vector) };
+        })
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score);
+
+      // Step 3: Extract Top 3 chunks
+      const topMatches = scoredChunks.slice(0, 3);
+      retrievedContext = topMatches.map(m => `[SOURCE: ${m.chunk.tag}] ${m.chunk.text}`).join("\n\n");
+
+      // Compile matching diagnostic metrics
+      matchedScoresLog = topMatches
+        .map(m => `#${m.chunk.tag.substring(0,10)} (Similarity: ${m.score.toFixed(3)})`)
+        .join(", ");
+      updateDiagnosticLog(diagnosticId, `⚡ [NEAREST_NEIGHBORS]: Hits: ${matchedScoresLog}`);
+
+      // Wait a fraction to simulate premium technical operator latency
+      await new Promise(r => setTimeout(r, 600));
+
+      // Step 4: Generate content via Gemini
+      updateDiagnosticLog(diagnosticId, `⚡ [GEMINI_GENERATION]: Ingesting context payload to ${geminiModel}...`);
+      
+      const systemPrompt = `You are a professional, technical AI representative representing Riwaz Udas. 
+Answer the user's query directly and precisely using ONLY the provided context blocks extracted from his database directory.
+Keep your response professional, engaging, and aligned with his exact accomplishments (such as Ory Hydra scaling, AWS, Go, Python, and Master's thesis details).
+
+Context:
+${retrievedContext}
+
+If the extracted context does NOT contain relevant facts to satisfy the query, politely say: "I apologize, but my local database directory does not contain verified telemetry for that specific question. However, you can consult Riwaz directly via his contact form below or email him at udasriwaz@gmail.com!"
+
+User Query: "${queryText}"
+Answer:`;
+
+      const responseText = await callGeminiGenerate(systemPrompt);
+      
+      // Purge log and append real answer
+      removeDiagnosticLog(diagnosticId);
+      appendChatBubble("assistant", responseText);
+
+    } else {
+      // Fallback: Local Keyword Overlap Parser
+      updateDiagnosticLog(diagnosticId, "⚡ [SIMULATION_MODE]: Querying keyword indexing...");
+      await new Promise(r => setTimeout(r, 500));
+
+      const scoredChunks = localKeywordMatch(queryText);
+      const topMatches = scoredChunks.slice(0, 3);
+      
+      retrievedContext = topMatches.map(m => m.chunk.text).join("\n\n");
+      matchedScoresLog = topMatches.map(m => `#${m.chunk.tag} (Overlap: ${m.score})`).join(", ");
+      
+      updateDiagnosticLog(diagnosticId, `⚡ [SIMULATION_MATCH]: Hits: ${matchedScoresLog}`);
+      await new Promise(r => setTimeout(r, 700));
+
+      removeDiagnosticLog(diagnosticId);
+
+      // Compile structured reply from matched sections
+      let structuredReply = `Based on my offline indices matching **"${queryText}"**, here are the relevant details from Riwaz's catalog:\n\n`;
+      
+      if (topMatches.length > 0 && topMatches[0].score > 0) {
+        topMatches.forEach(m => {
+          structuredReply += `*   **${m.chunk.tag}:** ${m.chunk.text}\n\n`;
+        });
+      } else {
+        structuredReply += `No direct keyword overlaps were found in Riwaz's resume directory blocks for this prompt.\n\n`;
+      }
+      
+      structuredReply += `\n*(Note: To unlock live conversational AI generation, please paste your Gemini API Key in the **Settings** tab! It is stored securely in your browser's LocalStorage only).*`;
+      
+      appendChatBubble("assistant", structuredReply);
+    }
+  } catch (err) {
+    console.error("RAG flow failed", err);
+    updateDiagnosticLog(diagnosticId, "❌ [CRITICAL_ERROR]: Telemetry check failed. Reverting.");
+    setTimeout(() => {
+      removeDiagnosticLog(diagnosticId);
+      appendChatBubble("assistant", "My secure RAG network suffered a connection drop. Please confirm your internet connection and verify that your Gemini API key in the settings tab is fully valid.");
+    }, 1200);
+  }
+
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+/**
+ * Performs a simple keyword overlap search in chunks
+ */
+function localKeywordMatch(query) {
+  const stopWords = new Set(["i", "want", "to", "add", "a", "the", "and", "is", "of", "in", "what", "are", "his", "did", "he", "do", "at", "for", "with", "on", "about"]);
+  const queryTokens = query.toLowerCase()
+    .replace(/[^\w\s]/g, '')
+    .split(/\s+/)
+    .filter(t => t.length > 1 && !stopWords.has(t));
+
+  if (queryTokens.length === 0) {
+    return knowledgeBase.map(chunk => ({ chunk, score: 0 }));
+  }
+
+  return knowledgeBase.map(chunk => {
+    const chunkTextLower = chunk.text.toLowerCase();
+    let score = 0;
+    queryTokens.forEach(token => {
+      const regex = new RegExp(`\\b${token}\\b`, 'g');
+      const matches = chunkTextLower.match(regex);
+      if (matches) {
+        score += matches.length;
+      }
+    });
+    return { chunk, score };
+  })
+  .filter(item => item.score > 0)
+  .sort((a, b) => b.score - a.score);
+}
+
+/**
+ * Calls Gemini text-embedding-004 API via secure HTTPS Fetch
+ */
+async function embedText(text) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${geminiApiKey}`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "models/text-embedding-004",
+      content: { parts: [{ text: text }] }
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Embedding API error: ${response.status} - ${errText}`);
+  }
+
+  const data = await response.json();
+  return data?.embedding?.values || null;
+}
+
+/**
+ * Calls selected Gemini text generation endpoint
+ */
+async function callGeminiGenerate(prompt) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiApiKey}`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ role: "user", parts: [{ text: prompt }] }]
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Generation API error: ${response.status} - ${errText}`);
+  }
+
+  const data = await response.json();
+  return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No output returned from neural node.";
+}
+
+/**
+ * Calculates high-dimensional Cosine Similarity
+ */
+function cosineSimilarity(vecA, vecB) {
+  if (vecA.length !== vecB.length) return 0;
+  let dotProduct = 0;
+  let normA = 0;
+  let normB = 0;
+  for (let i = 0; i < vecA.length; i++) {
+    dotProduct += vecA[i] * vecB[i];
+    normA += vecA[i] * vecA[i];
+    normB += vecB[i] * vecB[i];
+  }
+  if (normA === 0 || normB === 0) return 0;
+  return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+}
+
+/**
+ * Visual bubble rendering helper
+ */
+function appendChatBubble(role, text) {
+  const chatMessages = document.getElementById("chat-messages");
+  if (!chatMessages) return;
+
+  const bubble = document.createElement("div");
+  bubble.className = `chat-message ${role}`;
+  
+  // Format simple markdown lists & line breaks
+  let formattedText = text
+    .replace(/\n/g, "<br>")
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.*?)\*/g, "<em>$1</em>");
+    
+  bubble.innerHTML = formattedText;
+  chatMessages.appendChild(bubble);
+}
+
+/**
+ * Telemetry Diagnostics Log helper
+ */
+function appendDiagnosticLog(text) {
+  const chatMessages = document.getElementById("chat-messages");
+  if (!chatMessages) return null;
+
+  const id = `diag_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+  const bubble = document.createElement("div");
+  bubble.className = "chat-message system";
+  bubble.id = id;
+  bubble.textContent = text;
+  
+  chatMessages.appendChild(bubble);
+  return id;
+}
+
+function updateDiagnosticLog(id, text) {
+  const log = document.getElementById(id);
+  if (log) log.textContent = text;
+}
+
+function removeDiagnosticLog(id) {
+  const log = document.getElementById(id);
+  if (log) log.remove();
+}
+
