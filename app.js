@@ -735,6 +735,11 @@ let geminiApiKey = "";
 let geminiModel = "gemini-2.5-flash";
 let cachedEmbeddings = {};
 
+// GCP Secure Cloud Function Relay URL (Pattern A)
+// If you deploy Pattern A, paste your Cloud Function URL here (e.g. 'https://us-central1-myproject.cloudfunctions.net/gemini-relay')
+// This allows secure API execution across all devices on the internet without storing any keys locally!
+const gcpRelayUrl = ""; 
+
 /**
  * Initializes the AI Chatbot mechanics, event listeners, and default Vector DB chunks
  */
@@ -793,8 +798,8 @@ function initAIHelperChatbot() {
   // Update Status Display
   updateApiStatusIndicator();
 
-  // If API Key is present, trigger async background generation for missing embeddings
-  if (geminiApiKey) {
+  // If API Key or GCP Cloud Function Relay is present, trigger async background generation for missing embeddings
+  if (geminiApiKey || gcpRelayUrl) {
     triggerBackgroundEmbedding();
   }
 }
@@ -821,7 +826,12 @@ function toggleChatbot() {
 function updateApiStatusIndicator() {
   const chatStatus = document.getElementById("chatbot-api-status");
 
-  if (geminiApiKey) {
+  if (gcpRelayUrl) {
+    if (chatStatus) {
+      chatStatus.textContent = "API Status: GCP Relay Active";
+      chatStatus.style.color = "var(--accent-cyan)";
+    }
+  } else if (geminiApiKey) {
     if (chatStatus) {
       chatStatus.textContent = "API Status: Neural RAG Active";
       chatStatus.style.color = "var(--accent-cyan)";
@@ -838,7 +848,7 @@ function updateApiStatusIndicator() {
  * Loops and generates missing vectors in the background
  */
 async function triggerBackgroundEmbedding() {
-  if (!geminiApiKey) return;
+  if (!geminiApiKey && !gcpRelayUrl) return;
 
   let updated = false;
   for (let i = 0; i < knowledgeBase.length; i++) {
@@ -902,7 +912,7 @@ async function sendChatMessage() {
   let matchedScoresLog = "";
 
   try {
-    if (geminiApiKey) {
+    if (geminiApiKey || gcpRelayUrl) {
       // Step 1: Embed Query
       updateDiagnosticLog(diagnosticId, "⚡ [VECTOR_DB]: Query embedding initiated via text-embedding-004...");
       const queryVector = await embedText(queryText);
@@ -1032,6 +1042,23 @@ function localKeywordMatch(query) {
  * Calls Gemini text-embedding-004 API via secure HTTPS Fetch
  */
 async function embedText(text) {
+  if (gcpRelayUrl) {
+    const response = await fetch(gcpRelayUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "embed",
+        text: text
+      })
+    });
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`GCP Relay Embedding error: ${response.status} - ${errText}`);
+    }
+    const data = await response.json();
+    return data?.embedding?.values || null;
+  }
+
   const url = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${geminiApiKey}`;
   const response = await fetch(url, {
     method: "POST",
@@ -1055,6 +1082,24 @@ async function embedText(text) {
  * Calls selected Gemini text generation endpoint
  */
 async function callGeminiGenerate(prompt) {
+  if (gcpRelayUrl) {
+    const response = await fetch(gcpRelayUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "generate",
+        prompt: prompt,
+        model: geminiModel
+      })
+    });
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`GCP Relay Generation error: ${response.status} - ${errText}`);
+    }
+    const data = await response.json();
+    return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No output returned from neural node.";
+  }
+
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiApiKey}`;
   const response = await fetch(url, {
     method: "POST",
