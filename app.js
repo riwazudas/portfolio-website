@@ -5,7 +5,54 @@
 // Register GSAP ScrollTrigger Plugin
 gsap.registerPlugin(ScrollTrigger);
 
+// EmailJS Live Email Configuration (Optional - Paste credentials here to enable live messaging!)
+const EMAILJS_PUBLIC_KEY = "32hIuMQjWu7TqwS--"; 
+const EMAILJS_SERVICE_ID = "service_j4p2t2i";
+const EMAILJS_TEMPLATE_ID = "template_fsl9xap";
+
 document.addEventListener("DOMContentLoaded", () => {
+  // Force browser to load at the absolute top of the page
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 50);
+  });
+
+  // Initialize EmailJS if credentials are provided
+  if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY && EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+    emailjs.init({
+      publicKey: EMAILJS_PUBLIC_KEY,
+    });
+    console.log("[EMAILJS]: Active live emailing pipeline initialized.");
+  }
+
+  // Smooth scroll for all internal anchor links (nav links, CTAs, logo)
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      const target = document.querySelector(targetId);
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth'
+        });
+        // Update URL hash without triggering a browser jump
+        history.pushState(null, null, targetId);
+      }
+    });
+  });
+
+  // Tag all non-GSAP animated glass cards as revealed immediately
+  document.querySelectorAll('.glass-card').forEach(card => {
+    if (!card.matches('.case-study-content, .project-card-large, .project-card-small, .skills-category, .contact-card-form')) {
+      card.classList.add('gsap-revealed');
+    }
+  });
+
   initParticleBackground();
   initHeroTypewriter();
   initScrollAnimations();
@@ -236,7 +283,8 @@ function initScrollAnimations() {
       ease: "back.out(1.7)"
     });
 
-    gsap.from([content, sidebar], {
+    // Animate content (the glass card) separately to resolve CSS transition conflicts
+    gsap.from(content, {
       scrollTrigger: {
         trigger: item,
         start: "top 80%",
@@ -244,7 +292,24 @@ function initScrollAnimations() {
       },
       opacity: 0,
       y: 40,
-      stagger: 0.2,
+      duration: 0.8,
+      ease: "power3.out",
+      clearProps: "all",
+      onComplete: () => {
+        content.classList.add("gsap-revealed");
+      }
+    });
+
+    // Animate sidebar
+    gsap.from(sidebar, {
+      scrollTrigger: {
+        trigger: item,
+        start: "top 80%",
+        toggleActions: "play none none none"
+      },
+      opacity: 0,
+      y: 40,
+      delay: 0.2,
       duration: 0.8,
       ease: "power3.out"
     });
@@ -261,7 +326,11 @@ function initScrollAnimations() {
     y: 30,
     stagger: 0.15,
     duration: 0.8,
-    ease: "power3.out"
+    ease: "power3.out",
+    clearProps: "all",
+    onComplete: function() {
+      this.targets().forEach(t => t.classList.add("gsap-revealed"));
+    }
   });
 
   // Skills Category Cards & Progress Bar Animations
@@ -274,7 +343,11 @@ function initScrollAnimations() {
       opacity: 0,
       y: 20,
       duration: 0.6,
-      ease: "power2.out"
+      ease: "power2.out",
+      clearProps: "all",
+      onComplete: () => {
+        category.classList.add("gsap-revealed");
+      }
     });
     
     // Animate inner skills bars
@@ -305,7 +378,11 @@ function initScrollAnimations() {
     y: 40,
     stagger: 0.2,
     duration: 0.8,
-    ease: "power3.out"
+    ease: "power3.out",
+    clearProps: "all",
+    onComplete: function() {
+      this.targets().forEach(t => t.classList.add("gsap-revealed"));
+    }
   });
 
   // Floating Metrics Counts Interpolation
@@ -342,7 +419,7 @@ function initScrollAnimations() {
   const sections = document.querySelectorAll("section, header");
   const navLinks = document.querySelectorAll(".nav-link");
   
-  window.addEventListener("scroll", () => {
+  function updateScrollSpy() {
     let current = "";
     sections.forEach(section => {
       const sectionTop = section.offsetTop;
@@ -358,7 +435,11 @@ function initScrollAnimations() {
         link.classList.add("active");
       }
     });
-  });
+  }
+  
+  window.addEventListener("scroll", updateScrollSpy);
+  // Run scroll spy on initialization to correct highlighted links
+  updateScrollSpy();
 }
 
 /* =========================================================================
@@ -635,7 +716,7 @@ function triggerFormContact() {
   const inputRow = document.getElementById("terminal-input-row");
   if (!body) return;
   
-  // Inject alert line in terminal
+  // 1. Inject alert line in terminal showing connection route
   const alertLine = document.createElement("div");
   alertLine.className = "terminal-line terminal-text-indigo";
   alertLine.innerHTML = `
@@ -645,28 +726,89 @@ function triggerFormContact() {
     ENDPOINT : ${email}<br>
     PAYLOAD  : "${msg.substring(0, 60)}..."<br>
     ---------------------------------------------------------<br>
-    [STATUS] Packet dispatched to Riwaz's SMTP pipeline. [SUCCESS]
+    [STATUS] Packet dispatched to EmailJS network pipeline...
   `;
-  
   body.insertBefore(alertLine, inputRow);
   body.scrollTop = body.scrollHeight;
   
-  // Flash terminal widget border
+  // Flash terminal widget border to alert theme (indigo)
   const widget = document.getElementById("cli-widget");
   if (widget) {
-    widget.style.borderColor = "var(--accent-cyan)";
-    widget.style.boxShadow = "0 0 30px rgba(0, 255, 255, 0.2)";
-    setTimeout(() => {
-      widget.style.borderColor = "var(--glass-border)";
-      widget.style.boxShadow = "0 20px 50px rgba(0, 0, 0, 0.4)";
-    }, 1500);
+    widget.style.borderColor = "var(--accent-indigo)";
+    widget.style.boxShadow = "0 0 30px rgba(99, 102, 241, 0.2)";
   }
-  
-  // Reset form
+
+  // Reset form fields immediately for clean client UX
   document.getElementById("contact-form").reset();
-  
-  // Trigger nice window alert
-  alert("Message Payload Dispatched! Check the terminal console to view the telemetry log of your event.");
+
+  // 2. EmailJS Dispatch Logic
+  if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY && EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+    const templateParams = {
+      name: name,
+      from_name: name,
+      email: email,
+      from_email: email,
+      message: msg,
+      time: new Date().toLocaleString()
+    };
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+      .then(() => {
+        // Success terminal log
+        const successLine = document.createElement("div");
+        successLine.className = "terminal-line terminal-text-cyan";
+        successLine.innerHTML = `[SUCCESS] Email successfully dispatched via EmailJS! Check your inbox.`;
+        body.insertBefore(successLine, inputRow);
+        body.scrollTop = body.scrollHeight;
+        
+        if (widget) {
+          widget.style.borderColor = "var(--accent-cyan)";
+          widget.style.boxShadow = "0 0 30px rgba(0, 255, 255, 0.2)";
+          setTimeout(() => {
+            widget.style.borderColor = "var(--glass-border)";
+            widget.style.boxShadow = "0 20px 50px rgba(0, 0, 0, 0.4)";
+          }, 1500);
+        }
+      })
+      .catch((error) => {
+        // Failure terminal log
+        const errorLine = document.createElement("div");
+        errorLine.className = "terminal-line terminal-text-red";
+        errorLine.innerHTML = `[ERROR] EmailJS dispatch failed: ${error.text || error.message || 'Unknown network error'}`;
+        body.insertBefore(errorLine, inputRow);
+        body.scrollTop = body.scrollHeight;
+        
+        if (widget) {
+          widget.style.borderColor = "red";
+          widget.style.boxShadow = "0 0 30px rgba(255, 0, 0, 0.2)";
+          setTimeout(() => {
+            widget.style.borderColor = "var(--glass-border)";
+            widget.style.boxShadow = "0 20px 50px rgba(0, 0, 0, 0.4)";
+          }, 1500);
+        }
+      });
+  } else {
+    // Simulated fallback mode (when EMAILJS credentials are not pasted yet)
+    setTimeout(() => {
+      const successLine = document.createElement("div");
+      successLine.className = "terminal-line terminal-text-cyan";
+      successLine.innerHTML = `[SUCCESS] Packet dispatched to Riwaz's SMTP pipeline (SIMULATED).<br>
+      *(To activate live email delivery, please edit 'app.js' and fill in your EmailJS Public Key, Service ID, and Template ID).*`;
+      body.insertBefore(successLine, inputRow);
+      body.scrollTop = body.scrollHeight;
+      
+      if (widget) {
+        widget.style.borderColor = "var(--accent-cyan)";
+        widget.style.boxShadow = "0 0 30px rgba(0, 255, 255, 0.2)";
+        setTimeout(() => {
+          widget.style.borderColor = "var(--glass-border)";
+          widget.style.boxShadow = "0 20px 50px rgba(0, 0, 0, 0.4)";
+        }, 1500);
+      }
+      
+      alert("Message Payload Dispatched! Check the terminal console next to the form to view the simulated log.");
+    }, 800);
+  }
 }
 
 /* =========================================================================
@@ -738,7 +880,7 @@ let cachedEmbeddings = {};
 // GCP Secure Cloud Function Relay URL (Pattern A)
 // If you deploy Pattern A, paste your Cloud Function URL here (e.g. 'https://us-central1-myproject.cloudfunctions.net/gemini-relay')
 // This allows secure API execution across all devices on the internet without storing any keys locally!
-const gcpRelayUrl = ""; 
+const gcpRelayUrl = "https://gemini-relay-970435669308.asia-southeast3.run.app"; 
 
 /**
  * Initializes the AI Chatbot mechanics, event listeners, and default Vector DB chunks
@@ -774,7 +916,7 @@ function initAIHelperChatbot() {
     id: index,
     tag: chunk.tag,
     text: chunk.text,
-    vector: cachedEmbeddings[chunk.text] || null
+    vector: (typeof precomputedEmbeddings !== 'undefined' && precomputedEmbeddings[chunk.text]) || cachedEmbeddings[chunk.text] || null
   }));
 
   // Merge custom facts from localStorage
@@ -914,7 +1056,7 @@ async function sendChatMessage() {
   try {
     if (geminiApiKey || gcpRelayUrl) {
       // Step 1: Embed Query
-      updateDiagnosticLog(diagnosticId, "⚡ [VECTOR_DB]: Query embedding initiated via text-embedding-004...");
+      updateDiagnosticLog(diagnosticId, "⚡ [VECTOR_DB]: Query embedding initiated via gemini-embedding-001...");
       const queryVector = await embedText(queryText);
       
       if (!queryVector) {
@@ -947,14 +1089,17 @@ async function sendChatMessage() {
       // Step 4: Generate content via Gemini
       updateDiagnosticLog(diagnosticId, `⚡ [GEMINI_GENERATION]: Ingesting context payload to ${geminiModel}...`);
       
-      const systemPrompt = `You are a professional, technical AI representative representing Riwaz Udas. 
-Answer the user's query directly and precisely using ONLY the provided context blocks extracted from his database directory.
-Keep your response professional, engaging, and aligned with his exact accomplishments (such as Ory Hydra scaling, AWS, Go, Python, and Master's thesis details).
+      const systemPrompt = `You are Riwaz Udas, a highly skilled AI Engineer and Software Developer. 
+You are speaking directly with a visitor to your portfolio in the first person ("I", "me", "my", "we"). 
+Your tone is confident, professional, friendly, and highly articulate. You are passionate about LLMs, Ory Hydra, Go backend engineering, and distributed scalable systems.
+
+Answer the user's query directly and precisely using ONLY the facts in the provided context blocks. 
+Keep your response concise, engaging, and aligned with your exact accomplishments. 
 
 Context:
 ${retrievedContext}
 
-If the extracted context does NOT contain relevant facts to satisfy the query, politely say: "I apologize, but my local database directory does not contain verified telemetry for that specific question. However, you can consult Riwaz directly via his contact form below or email him at udasriwaz@gmail.com!"
+If the context does NOT contain relevant facts to satisfy the query, politely say in character: "I don't have that specific details in my offline index, but I'd love to chat about it! Feel free to drop a message in my contact form below or reach me directly at udasriwaz@gmail.com!"
 
 User Query: "${queryText}"
 Answer:`;
@@ -981,18 +1126,18 @@ Answer:`;
 
       removeDiagnosticLog(diagnosticId);
 
-      // Compile structured reply from matched sections
-      let structuredReply = `Based on my offline indices matching **"${queryText}"**, here are the relevant details from Riwaz's catalog:\n\n`;
+      // Compile structured reply from matched sections in first person
+      let structuredReply = `Hey! Based on my local offline indices for **"${queryText}"**, here is the relevant telemetry from my background:\n\n`;
       
       if (topMatches.length > 0 && topMatches[0].score > 0) {
         topMatches.forEach(m => {
           structuredReply += `*   **${m.chunk.tag}:** ${m.chunk.text}\n\n`;
         });
       } else {
-        structuredReply += `No direct keyword overlaps were found in Riwaz's resume directory blocks for this prompt.\n\n`;
+        structuredReply += `I couldn't find any direct matches in my local database blocks for that query.\n\n`;
       }
       
-      structuredReply += `\n*(Note: To unlock live conversational AI generation, please paste your Gemini API Key in the **Settings** tab! It is stored securely in your browser's LocalStorage only).*`;
+      structuredReply += `\n*(Note: To unlock my full conversational AI engine, feel free to enter your Gemini API Key in the **Settings** tab above! It stays 100% secure in your local browser storage).*`;
       
       appendChatBubble("assistant", structuredReply);
     }
@@ -1039,7 +1184,7 @@ function localKeywordMatch(query) {
 }
 
 /**
- * Calls Gemini text-embedding-004 API via secure HTTPS Fetch
+ * Calls Gemini gemini-embedding-001 API via secure HTTPS Fetch
  */
 async function embedText(text) {
   if (gcpRelayUrl) {
@@ -1059,13 +1204,14 @@ async function embedText(text) {
     return data?.embedding?.values || null;
   }
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${geminiApiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${geminiApiKey}`;
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: "models/text-embedding-004",
-      content: { parts: [{ text: text }] }
+      model: "models/gemini-embedding-001",
+      content: { parts: [{ text: text }] },
+      outputDimensionality: 768
     })
   });
 

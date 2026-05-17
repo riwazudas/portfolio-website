@@ -36,11 +36,12 @@ exports.geminiRelay = async (req, res) => {
         return;
       }
 
-      // Proxy to Google text-embedding-004
-      const googleUrl = `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${apiKey}`;
+      // Proxy to Google gemini-embedding-001
+      const googleUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${apiKey}`;
       const payload = JSON.stringify({
-        model: "models/text-embedding-004",
-        content: { parts: [{ text: text }] }
+        model: "models/gemini-embedding-001",
+        content: { parts: [{ text: text }] },
+        outputDimensionality: 768
       });
       
       const result = await makeHttpsRequest(googleUrl, 'POST', payload);

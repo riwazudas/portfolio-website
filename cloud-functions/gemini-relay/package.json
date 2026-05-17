@@ -6,5 +6,7 @@
   "scripts": {
     "start": "functions-framework --target=geminiRelay"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.3.0"
+  }
 }
