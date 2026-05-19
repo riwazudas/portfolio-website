@@ -251,6 +251,15 @@ AI Engineer with a Master's degree in Computer Science from the University of Me
 \resumeSubHeadingListStart
 
 \resumeProjectHeading
+{\textbf{CareerPilot -- Intelligent Resume Builder \& Job Tracker}}{}
+\resumeItemListStart
+\resumeItem{Developed a full-stack, local-first application featuring a \textbf{React/Vite dashboard} and a \textbf{Node.js synchronization server} managing a local filesystem JSON database}
+\resumeItem{Engineered a \textbf{LaTeX resume customization engine} that automatically processes base LaTeX files, performs LLM tailoring based on job descriptions, and exports clean compiled \textbf{.tex} files to local directories}
+\resumeItem{Integrated \textbf{Gemini API} to automate job description parsing, keyword priority ranking, change-log generation, and behavioral interview preparation using target STAR-method response coaching}
+\resumeItem{Orchestrated live \textbf{LaTeX compiler API integrations} to render, compile, and stream real-time PDF preview sheets directly inside the React frontend interface}
+\resumeItemListEnd
+
+\resumeProjectHeading
 {\textbf{Social Media Geotagging using Large Language Models (Master's Thesis)}}{}
 \resumeItemListStart
 
